@@ -49,7 +49,7 @@ export interface I18nRes {
         const variableType = `
     variableType:{
       ${vs.map(v => {
-            return `'${v}':any;`
+            return `${JSON.stringify(v)}:any;`
         }).join('\n')}
     };
     `;
@@ -58,7 +58,7 @@ export interface I18nRes {
     returnType:${JSON.stringify(value)};
     `;
 
-        code.push(`  ${key}: { ${returnType} ${variableType} }`
+        code.push(`  ${JSON.stringify(key)}: { ${returnType} ${variableType} }`
         );
     });
     code.push("}");
