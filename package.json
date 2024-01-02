@@ -1,6 +1,6 @@
 {
     "name": "typed-icu-message",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "main": "./dist/cjs/index.js",
     "module": "./dist/mjs/index.js",
     "types": "./dist/cjs/index.d.ts",
@@ -12,7 +12,8 @@
         "dist"
     ],
     "scripts": {
-        "test": "jest",
+        "demo":"ts-node demo/demo",
+        "test": "rm -rf dist && jest",
         "build": "tsc -p tsconfig-cjs.json && tsc -p tsconfig-esm.json"
     },
     "dependencies": {

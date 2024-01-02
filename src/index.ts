@@ -10,15 +10,18 @@ import {
     isArgumentElement
 } from '@formatjs/icu-messageformat-parser';
 
-function collectVariables2(ast: MessageFormatElement[], ret: Set<string>) {
+function collectVariables2(ast: MessageFormatElement[], ret: Map<string, string>) {
     for (const a of ast) {
-        if (isArgumentElement(a) || isDateElement(a) || isNumberElement(a)
-            || isPluralElement(a) || isSelectElement(a) || isTimeElement(a)
-        ) {
-            ret.add(a.value);
+        if (isPluralElement(a) || isNumberElement(a)) {
+            ret.set(a.value, 'number');
         }
+        else if (isArgumentElement(a) || isDateElement(a)
+            || isSelectElement(a) || isTimeElement(a)
+        ) {
 
-        if (isTagElement(a)) {
+            ret.set(a.value, 'any');
+        }
+        else if (isTagElement(a)) {
             collectVariables2(a.children, ret);
         }
 
@@ -29,14 +32,24 @@ function collectVariables2(ast: MessageFormatElement[], ret: Set<string>) {
         }
     }
 }
-function collectVariables(str: string, ret: Set<string> = new Set()) {
+function collectVariables(str: string, ret: Map<string, string> = new Map()) {
     const ast = parse(str);
     collectVariables2(ast, ret);
     return ret;
 }
 
+export type lang = string;
+export function getTsTypesFromRes(res2: Record<lang, Record<string, string>>) {
 
-export function getTsTypesFromRes(res: Record<string, string>) {
+    const res: Record<string, string[]> = {};
+
+    Object.entries(res2).forEach(([lan, res3]) => {
+        Object.entries(res3).forEach(([key, v]) => {
+            res[key] = res[key] || [];
+            res[key].push(v);
+        });
+    });
+
     const code = [
         `
 /* eslint-disable */
@@ -44,18 +57,18 @@ export interface I18nRes {
 `,
     ];
     Object.entries(res).forEach(([key, value]) => {
-        const vs = Array.from(collectVariables(value));
+        const vs = Array.from(collectVariables(value[0]).entries());
 
         const variableType = `
     variableType:{
-      ${vs.map(v => {
-            return `${JSON.stringify(v)}:any;`
+      ${vs.map(([key, v]) => {
+            return `${JSON.stringify(key)}:${v};`
         }).join('\n')}
     };
     `;
 
         const returnType = `
-    returnType:${JSON.stringify(value)};
+    returnType:${value.map(v => JSON.stringify(v)).join('|')};
     `;
 
         code.push(`  ${JSON.stringify(key)}: { ${returnType} ${variableType} }`
@@ -73,5 +86,5 @@ export type I18nTranslate = <T extends I18nResKeys>(
 ) => I18nRes[T]['returnType'];
 `);
 
-return code.join('\n');
+    return code.join('\n');
 }

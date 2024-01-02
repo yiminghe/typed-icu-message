@@ -4,8 +4,14 @@ import { getTsTypesFromRes } from "../src";
 describe('getTsTypesFromRes', () => {
     it('works', () => {
         const code = getTsTypesFromRes({
-            'a': 'a {b} {c}',
-            'c': 'd {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}'
+          zh:{
+            'a': '一 {b} {c}',
+            'c': '二 {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}'
+          },
+          en:{
+            'a': 'one {b} {c}',
+            'c': 'two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}'
+          }
         });
         expect(code).toMatchInlineSnapshot(`
 "
@@ -13,7 +19,7 @@ describe('getTsTypesFromRes', () => {
 export interface I18nRes {
 
   "a": { 
-    returnType:"a {b} {c}";
+    returnType:"一 {b} {c}"|"one {b} {c}";
      
     variableType:{
       "b":any;
@@ -21,10 +27,10 @@ export interface I18nRes {
     };
      }
   "c": { 
-    returnType:"d {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}";
+    returnType:"二 {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}"|"two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}";
      
     variableType:{
-      "num":any;
+      "num":number;
 "num2":any;
     };
      }

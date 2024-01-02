@@ -21,28 +21,37 @@ npm install typed-icu-message
 import { getTsTypesFromRes } from 'typed-icu-message';
 
 const code = getTsTypesFromRes({
-    'a': 'a {b} {c}',
-    'c': 'd {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}'
+    zh: {
+        'a': '一 {b} {c}',
+        'c': '二 {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}'
+    },
+    en: {
+        'a': 'one {b} {c}',
+        'c': 'two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}'
+    }
 });
 ```
 
 generated code:
 ```typescript
+
+/* eslint-disable */
 export interface I18nRes {
-  a: {
-    returnType: "a {b} {c}";
+
+  "a": {
+    returnType: "一 {b} {c}" | "one {b} {c}";
 
     variableType: {
-      'b': any;
-      'c': any;
+      "b": any;
+      "c": any;
     };
   }
-  c: {
-    returnType: "d {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}";
+  "c": {
+    returnType: "二 {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}" | "two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}";
 
     variableType: {
-      'num': any;
-      'num2': any;
+      "num": number;
+      "num2": any;
     };
   }
 }
