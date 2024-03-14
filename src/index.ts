@@ -33,8 +33,13 @@ function collectVariables2(ast: MessageFormatElement[], ret: Map<string, string>
   }
 }
 function collectVariables(str: string, ret: Map<string, string> = new Map()) {
-  const ast = parse(str);
-  collectVariables2(ast, ret);
+  try {
+    const ast = parse(str);
+    collectVariables2(ast, ret);
+  } catch (e) {
+    console.error('parse icu error: ' + str);
+    console.error(e);
+  }
   return ret;
 }
 
