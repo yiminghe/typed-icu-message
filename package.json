@@ -1,6 +1,6 @@
 {
     "name": "typed-icu-message",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "main": "./dist/cjs/index.js",
     "module": "./dist/mjs/index.js",
     "types": "./dist/cjs/index.d.ts",
@@ -27,5 +27,6 @@
         "@types/node": "18.x",
         "jest": "~29.7.0",
         "typescript": "5.x"
-    }
+    },
+    "packageManager": "pnpm@9.1.4"
 }

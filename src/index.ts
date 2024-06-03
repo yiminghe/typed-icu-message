@@ -44,7 +44,23 @@ function collectVariables(str: string, ret: Map<string, string> = new Map()) {
 }
 
 export type lang = string;
-export function getTsTypesFromRes(res2: Record<lang, Record<string, string>>, { keyAsMethod }: { keyAsMethod?: boolean } = {}) {
+export function getTsTypesFromRes(res2: Record<lang, Record<string, string>>, { 
+  keyAsMethod,ns }: {
+     keyAsMethod?: boolean;
+     ns?:string|string[];
+ } = {}) {
+
+  let nsType;
+
+  if(!ns){
+    ns='string';
+  }
+
+  if(!Array.isArray(ns)){
+    ns=[ns];
+  }
+
+  nsType=ns.join(' | ');
 
   const res: Record<string, string[]> = {};
 
@@ -83,6 +99,7 @@ export interface I18nRes {
 
   code.push(`
 export type I18nResKeys = keyof I18nRes;
+export type I18nNsType = ${nsType};
 `);
 
   if (keyAsMethod) {
@@ -97,9 +114,15 @@ export type I18nResKeys = keyof I18nRes;
   } else {
     code.push(`
 export type I18nTranslate = <T extends I18nResKeys>(
-  p: T,
-  params: I18nRes[T]['variableType'],
-  defaultMessage?: string,
+  ...args:
+    | [p: T,
+      options: I18nRes[T]['variableType'] & {
+        ns?: I18nNsType|I18nNsType[];
+        defaultValue?: string;
+      } ]
+    | [p: T,
+      defaultValue: string,
+      options: I18nRes[T]['variableType'] & {ns?: I18nNsType|I18nNsType[];} ]
 ) => I18nRes[T]['returnType'];
 `)
   }

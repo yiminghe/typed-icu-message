@@ -21,6 +21,8 @@ fs.writeFileSync(path.join(__dirname, 'locale.ts'), code);
 
 const t: I18nTranslate = () => ({}) as any;
 
-t('c', { num: 1, num2: 2 }, '');
+t('c', { num: 1, num2: 2 });
 
-t('a', { b: 1, c: 2 }, '');
+t('a', '', { b: 1, c: 2, });
+
+t('c', { num: 1, num2: 2, ns: '1', defaultValue: '2' });
