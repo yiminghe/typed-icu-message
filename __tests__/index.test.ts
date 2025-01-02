@@ -37,11 +37,19 @@ export interface I18nRes {
 }
 
 export type I18nResKeys = keyof I18nRes;
+export type I18nNsType = string;
+
 
 export type I18nTranslate = <T extends I18nResKeys>(
-  p: T,
-  params: I18nRes[T]['variableType'],
-  defaultMessage?: string,
+  ...args:
+    | [p: T,
+      options?: I18nRes[T]['variableType'] & {
+        ns?: I18nNsType|I18nNsType[];
+        defaultValue?: string;
+      } ]
+    | [p: T,
+      defaultValue: string,
+      options?: I18nRes[T]['variableType'] & {ns?: I18nNsType|I18nNsType[];} ]
 ) => I18nRes[T]['returnType'];
 "
 `);
