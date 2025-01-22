@@ -9,7 +9,7 @@ describe('getTsTypesFromRes', () => {
             'c': '二 {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}'
           },
           en:{
-            'a': 'one {b} {c}',
+            'a': 'one {b} {c} {d}',
             'c': 'two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}'
           }
         });
@@ -19,11 +19,12 @@ describe('getTsTypesFromRes', () => {
 export interface I18nRes {
 
 "a": { 
-    returnType: "一 {b} {c}" | "one {b} {c}";
+    returnType: "一 {b} {c}" | "one {b} {c} {d}";
      
     variableType: {
       "b": any;
 "c": any;
+"d": any;
     };
      };
 "c": { 
