@@ -10,16 +10,23 @@ import {
   isArgumentElement
 } from '@formatjs/icu-messageformat-parser';
 
+function setType(key: string, value: string, store: Map<string, string>) {
+  const exist = store.get(key);
+  if (exist && exist !== value) {
+    value = 'any';
+  }
+  store.set(key, value);
+}
+
 function collectVariables2(ast: MessageFormatElement[], ret: Map<string, string>) {
   for (const a of ast) {
     if (isPluralElement(a) || isNumberElement(a)) {
-      ret.set(a.value, 'number');
+      setType(a.value, 'number', ret);
     }
     else if (isArgumentElement(a) || isDateElement(a)
       || isSelectElement(a) || isTimeElement(a)
     ) {
-
-      ret.set(a.value, 'any');
+      setType(a.value, 'any', ret);
     }
     else if (isTagElement(a)) {
       collectVariables2(a.children, ret);
@@ -36,9 +43,9 @@ function collectVariables(str: string, ret: Map<string, string> = new Map()) {
   try {
     const ast = parse(str);
     collectVariables2(ast, ret);
-  } catch (e) {
-    console.error('parse icu error: ' + str);
-    console.error(e);
+  } catch (e: any) {
+    e.message = 'parse icu error: ' + str + '\n' + e.message;
+    throw e;
   }
   return ret;
 }
@@ -76,21 +83,30 @@ export interface I18nRes {
 `,
   ];
   Object.entries(res).forEach(([key, value]) => {
+    const vMap = new Map<string, string>();
+
+    for (const v of value) {
+      const vs = Array.from(collectVariables(v).entries());
+      for (let [k, v] of vs) {
+        setType(k, v, vMap);
+      }
+    }
+
     const vs = Array.from(collectVariables(value[0]).entries());
 
     const variableType = `
-    variableType:{
-      ${vs.map(([key, v]) => {
-      return `${JSON.stringify(key)}:${v};`
+    variableType: {
+      ${Array.from(vMap.entries()).map(([key, v]) => {
+      return `${JSON.stringify(key)}: ${v};`
     }).join('\n')}
     };
     `;
 
     const returnType = `
-    returnType:${value.map(v => JSON.stringify(v)).join('|')};
+    returnType: ${value.map(v => JSON.stringify(v)).join(' | ')};
     `;
 
-    code.push(`  ${JSON.stringify(key)}: { ${returnType} ${variableType} }`
+    code.push(`${JSON.stringify(key)}: { ${returnType} ${variableType} };`
     );
   });
   code.push("}");

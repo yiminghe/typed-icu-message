@@ -10,7 +10,7 @@ const code = getTsTypesFromRes({
         'c': '二 {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}'
     },
     en: {
-        'a': 'one {b} {c}',
+        'a': 'one {b} {c} {d}',
         'c': 'two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}'
     }
 });
@@ -23,6 +23,6 @@ const t: I18nTranslate = () => ({}) as any;
 
 t('c', { num: 1, num2: 2 });
 
-t('a', '', { b: 1, c: 2, });
+t('a', '', { b: 1, c: 2, d: 3 });
 
 t('c', { num: 1, num2: 2, ns: '1', defaultValue: '2' });

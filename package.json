@@ -1,12 +1,15 @@
 {
     "name": "typed-icu-message",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "main": "./dist/cjs/index.js",
     "module": "./dist/mjs/index.js",
     "types": "./dist/cjs/index.d.ts",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/yiminghe/typed-icu-message.git"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org/"
     },
     "files": [
         "dist"
