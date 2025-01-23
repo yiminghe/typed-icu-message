@@ -108,7 +108,7 @@ export interface I18nRes {
       }
     }
 
-    react = allComponents.size > 0;
+    react = react || allComponents.size > 0;
 
     const componentsType = `
     componentsType: {
