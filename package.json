@@ -1,6 +1,6 @@
 {
     "name": "typed-icu-message",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "main": "./dist/cjs/index.js",
     "module": "./dist/mjs/index.js",
     "types": "./dist/cjs/index.d.ts",
@@ -15,20 +15,24 @@
         "dist"
     ],
     "scripts": {
-        "demo": "ts-node demo/demo",
+        "demo": "ts-node demo/demo.tsx",
         "test": "rm -rf dist && jest",
         "build": "tsc -p tsconfig-cjs.json && tsc -p tsconfig-esm.json"
     },
     "dependencies": {
         "@formatjs/icu-messageformat-parser": "2.x"
+       
     },
     "devDependencies": {
-        "ts-node": "10.x",
+        "@types/react": "^19.0.8",
+        "react": "^19.0.0",
+        "react-i18next": "^15.4.0",
         "@swc/core": "^1.3.101",
         "@swc/jest": "^0.2.29",
         "@types/jest": "29.x",
         "@types/node": "18.x",
         "jest": "~29.7.0",
+        "ts-node": "10.x",
         "typescript": "5.x"
     },
     "packageManager": "pnpm@9.15.2"

@@ -1,3 +1,6 @@
+import React from 'react';
+    import { Trans } from 'react-i18next';
+    
 
 /* eslint-disable */
 export interface I18nRes {
@@ -5,19 +8,51 @@ export interface I18nRes {
 "a": { 
     returnType: "一 {b} {c}" | "one {b} {c} {d}";
      
-    variableType: {
+    valuesType: {
       "b": any;
 "c": any;
 "d": any;
     };
+     
+    componentsType: {
+   
+    }
+     };
+"b": { 
+    returnType: "b" | "bb";
+     
+    valuesType: {
+      
+    };
+     
+    componentsType: {
+   
+    }
      };
 "c": { 
     returnType: "二 {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}" | "two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}";
      
-    variableType: {
+    valuesType: {
       "num": number;
 "num2": any;
     };
+     
+    componentsType: {
+   
+    }
+     };
+"d": { 
+    returnType: "<s>d {d}</s>" | "<ss>d {dd}</ss>";
+     
+    valuesType: {
+      "d": any;
+"dd": any;
+    };
+     
+    componentsType: {
+   "s": React.ReactNode;
+"ss": React.ReactNode;
+    }
      };
 }
 
@@ -28,11 +63,24 @@ export type I18nNsType = string;
 export type I18nTranslate = <T extends I18nResKeys>(
   ...args:
     | [p: T,
-      options?: I18nRes[T]['variableType'] & {
+      options: I18nRes[T]['valuesType'] & {
         ns?: I18nNsType|I18nNsType[];
         defaultValue?: string;
       } ]
     | [p: T,
       defaultValue: string,
-      options?: I18nRes[T]['variableType'] & {ns?: I18nNsType|I18nNsType[];} ]
+      options: I18nRes[T]['valuesType'] & {ns?: I18nNsType|I18nNsType[];} ]
 ) => I18nRes[T]['returnType'];
+
+
+      export function getI18nComponent(i18n:any){
+        return <T extends I18nResKeys>({i18nKey,values,components}:{
+          i18nKey:T;
+          defaultValue?:string;
+          values:I18nRes[T]['valuesType'];
+          components:I18nRes[T]['componentsType'];
+        }):I18nRes[T]['returnType'] => {
+        return React.createElement(Trans, {i18nKey,values,components,t:i18n.t,i18n} as any) as any;
+    };
+      }
+      
