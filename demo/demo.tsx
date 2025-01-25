@@ -7,15 +7,15 @@ import { getI18nComponent, type I18nTranslate } from "./locale";
 const code = getTsTypesFromRes({
     zh: {
         'a': '一 {b} {c}',
-        'b':'b',
+        'b': 'b',
         'c': '二 {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}',
-        'd':'<s>d {d}</s>',
+        'd': '<s>d {d}</s>',
     },
     en: {
         'a': 'one {b} {c} {d}',
-        'b':'bb',
+        'b': 'bb',
         'c': 'two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}',
-        'd':'<ss>d {dd}</ss>',
+        'd': '<ss>d {dd}</ss>',
     }
 });
 
@@ -25,14 +25,14 @@ fs.writeFileSync(path.join(__dirname, 'locale.ts'), code);
 
 const t: I18nTranslate = () => ({}) as any;
 
-const T=getI18nComponent({});
+const c = getI18nComponent({});
 
-const tt=<T i18nKey="d" components={{s:null,ss:null}} values={{d:1,dd:2}}/>;
+c("d", { d: 1, dd: 2 }, { s: null, ss: null });
 
-t('b',{});
+t('b', {});
 
 t('c', { num: 1, num2: 2 });
 
 t('a', '', { b: 1, c: 2, d: 3 });
 
-t('c', { num: 1, num2: 2, ns: '1', defaultValue: '2' });
+t('c', { num: 1, num2: 2, ns: '1' });
