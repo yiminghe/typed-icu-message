@@ -58,26 +58,8 @@ function collectTypes(str: string,
 
 export type lang = string;
 export function getTsTypesFromRes(
-  res2: Record<lang, Record<string, string>>, {
-    ns,
-    reactI18next = 'react-i18next',
-  }: {
-    ns?: string | string[];
-    reactI18next?: string
-  } = {}) {
-
-  let nsType;
-
-  if (!ns) {
-    ns = 'string';
-  }
-
-  if (!Array.isArray(ns)) {
-    ns = [ns];
-  }
-
-  nsType = ns.join(' | ');
-
+  res2: Record<lang, Record<string, string>>
+) {
   const res: Record<string, string[]> = {};
 
   Object.entries(res2).forEach(([lan, res3]) => {
@@ -110,19 +92,17 @@ export interface I18nRes {
 
     react = react || allComponents.size > 0;
 
-    const componentsType = `
-    componentsType: {
-   ${Array.from(allComponents.values()).map((key) => {
-      return `${JSON.stringify(key)}: React.ReactNode;`
-    }).join('\n')}
-    }
-    `;
 
     const valuesType = `
     valuesType: {
       ${Array.from(vMap.entries()).map(([key, v]) => {
       return `${JSON.stringify(key)}: ${v};`
     }).join('\n')}
+
+      ${Array.from(allComponents.values()).map((key) => {
+      return `${JSON.stringify(key)}: (chunks:React.ReactNode) => React.ReactNode;`
+    }).join('\n')}
+
     };
     `;
 
@@ -130,47 +110,26 @@ export interface I18nRes {
     returnType: ${value.map(v => JSON.stringify(v)).join(' | ')};
     `;
 
-    code.push(`${JSON.stringify(key)}: { ${returnType} ${valuesType} ${componentsType} };`
+    code.push(`${JSON.stringify(key)}: { ${returnType} ${valuesType}};`
     );
   });
   code.push("}");
 
   code.push(`
 export type I18nResKeys = keyof I18nRes;
-export type I18nNsType = ${nsType};
 `);
 
 
   code.push(`
 export type I18nTranslate = <T extends I18nResKeys>(
-  ...args:
-    | [key: T,
-      options: I18nRes[T]['valuesType'] & {
-        ns?: I18nNsType|I18nNsType[];
-        defaultValue?: string;
-      } ]
-    | [key: T,
-      defaultValue: string,
-      options: I18nRes[T]['valuesType'] & {ns?: I18nNsType|I18nNsType[];} ]
+      key: T,
+      values: I18nRes[T]['valuesType']
 ) => I18nRes[T]['returnType'];
 `);
 
   if (react) {
     code.unshift(`import React from 'react';
-    import { Trans } from '${reactI18next}';
     `);
-    code.push(`
-      export function getI18nComponent(i18n:any){
-        return <T extends I18nResKeys>(
-          key:T,
-          values:I18nRes[T]['valuesType'],
-          components:I18nRes[T]['componentsType'],
-          defaultValue?:string,
-        ):I18nRes[T]['returnType'] => {
-        return React.createElement(Trans, {i18nKey:key,values,components,t:i18n.t,i18n} as any) as any;
-    };
-      }
-      `);
   }
 
   return code.join('\n');

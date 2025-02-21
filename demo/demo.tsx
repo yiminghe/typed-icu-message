@@ -1,10 +1,11 @@
 import { getTsTypesFromRes } from "../src";
-import React from 'react';
 import fs from 'fs';
 import path from 'path';
-import { getI18nComponent, type I18nTranslate } from "./locale";
+import { type I18nTranslate } from "./locale";
+import { createIntl } from '@formatjs/intl';
+import React from 'react';
 
-const code = getTsTypesFromRes({
+const messages = {
     zh: {
         'a': '一 {b} {c}',
         'b': 'b',
@@ -17,22 +18,27 @@ const code = getTsTypesFromRes({
         'c': 'two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}',
         'd': '<ss>d {dd}</ss>',
     }
-});
+};
+
+const code = getTsTypesFromRes(messages);
 
 fs.writeFileSync(path.join(__dirname, 'locale.ts'), code);
 
+const intl = createIntl({
+    locale: 'en',
+    messages: messages.en
+});
 
+const t: I18nTranslate = ((id:any, values:any) => intl.formatMessage({ id }, values)) as any;
 
-const t: I18nTranslate = () => ({}) as any;
+const rich=t("d", { d: 1, dd: 2, s: (chunks) => React.createElement('div',{},chunks,'1'), ss: (chunks) => React.createElement('span',{},chunks,'3') })
 
-const c = getI18nComponent({});
+console.log(JSON.stringify(rich,null,2));
 
-c("d", { d: 1, dd: 2 }, { s: null, ss: null });
+console.log(t('b', {}));
 
-t('b', {});
+console.log(t('c', { num: 1, num2: 2 }));
 
-t('c', { num: 1, num2: 2 });
+console.log(t('a', { b: 1, c: 2, d: 3 }));
 
-t('a', '', { b: 1, c: 2, d: 3 });
-
-t('c', { num: 1, num2: 2, ns: '1' });
+console.log(t('c', { num: 1, num2: 2 }));
