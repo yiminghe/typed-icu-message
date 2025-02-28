@@ -19,12 +19,7 @@ export interface I18nRes {
 "b": { 
     returnType: "b" | "bb";
      
-    valuesType: {
-      
-
-      
-
-    };
+    valuesType: Record<string, never>;
     };
 "c": { 
     returnType: "二 {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}" | "two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}";

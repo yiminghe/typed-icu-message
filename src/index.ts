@@ -92,19 +92,29 @@ export interface I18nRes {
 
     react = react || allComponents.size > 0;
 
+    const vEntries = Array.from(vMap.entries());
+    const componentsValues = Array.from(allComponents.values());
+    let valuesType = '';
 
-    const valuesType = `
+
+    if (vEntries.length > 0 || componentsValues.length > 0) {
+      valuesType = `
     valuesType: {
       ${Array.from(vMap.entries()).map(([key, v]) => {
-      return `${JSON.stringify(key)}: ${v};`
-    }).join('\n')}
+        return `${JSON.stringify(key)}: ${v};`
+      }).join('\n')}
 
       ${Array.from(allComponents.values()).map((key) => {
-      return `${JSON.stringify(key)}: (chunks:React.ReactNode) => React.ReactNode;`
-    }).join('\n')}
+        return `${JSON.stringify(key)}: (chunks:React.ReactNode) => React.ReactNode;`
+      }).join('\n')}
 
     };
     `;
+    } else {
+      valuesType = `
+    valuesType: Record<string, never>;
+    `;
+    }
 
     const returnType = `
     returnType: ${value.map(v => JSON.stringify(v)).join(' | ')};

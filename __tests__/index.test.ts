@@ -6,15 +6,21 @@ describe('getTsTypesFromRes', () => {
         const code = getTsTypesFromRes({
           zh:{
             'a': '一 {b} {c}',
+            'b':'b',
+            'r': '<s>d {d}</s>',
             'c': '二 {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}'
           },
           en:{
             'a': 'one {b} {c} {d}',
+            'r': '<s>d2 {d} {d2}</s>',
+            'b':'z',
             'c': 'two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}'
           }
         });
         expect(code).toMatchInlineSnapshot(`
-"
+"import React from 'react';
+    
+
 /* eslint-disable */
 export interface I18nRes {
 
@@ -27,6 +33,22 @@ export interface I18nRes {
 "d": any;
 
       
+
+    };
+    };
+"b": { 
+    returnType: "b" | "z";
+     
+    valuesType: Record<string, never>;
+    };
+"r": { 
+    returnType: "<s>d {d}</s>" | "<s>d2 {d} {d2}</s>";
+     
+    valuesType: {
+      "d": any;
+"d2": any;
+
+      "s": (chunks:React.ReactNode) => React.ReactNode;
 
     };
     };
