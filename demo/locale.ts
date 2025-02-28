@@ -2,12 +2,12 @@ import React from 'react';
     
 
 /* eslint-disable */
-export interface I18nRes {
+export interface I18nMessages {
 
 "a": { 
-    returnType: "一 {b} {c}" | "one {b} {c} {d}";
+    t: "一 {b} {c}" | "one {b} {c} {d}";
      
-    valuesType: {
+    v: {
       "b": any;
 "c": any;
 "d": any;
@@ -17,14 +17,14 @@ export interface I18nRes {
     };
     };
 "b": { 
-    returnType: "b" | "bb";
+    t: "b" | "bb";
      
-    valuesType: undefined;
+    v: undefined;
     };
 "c": { 
-    returnType: "二 {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}" | "two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}";
+    t: "二 {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}" | "two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}";
      
-    valuesType: {
+    v: {
       "num": number;
 "num2": any;
 
@@ -33,9 +33,9 @@ export interface I18nRes {
     };
     };
 "d": { 
-    returnType: "<s>d {d}</s>" | "<ss>d {dd}</ss>";
+    t: "<s>d {d}</s>" | "<ss>d {dd}</ss>";
      
-    valuesType: {
+    v: {
       "d": any;
 "dd": any;
 
@@ -46,10 +46,10 @@ export interface I18nRes {
     };
 }
 
-export type I18nResKeys = keyof I18nRes;
+export type I18nMessageKeys = keyof I18nMessages;
 
 
-export type I18nTranslate = <T extends I18nResKeys>(
+export type I18nTranslate = <T extends I18nMessageKeys>(
     key: T,
-    ...values: T extends I18nResKeys ? ( I18nRes[T]['valuesType'] extends undefined ? [] : [ I18nRes[T]['valuesType'] ] ):[]
-) => I18nRes[T]['returnType'];
+    ...values: T extends I18nMessageKeys ? ( I18nMessages[T]['v'] extends undefined ? [] : [ I18nMessages[T]['v'] ] ):[]
+) => I18nMessages[T]['t'];

@@ -74,7 +74,7 @@ export function getTsTypesFromRes(
   const code = [
     `
 /* eslint-disable */
-export interface I18nRes {
+export interface I18nMessages {
 `,
   ];
   Object.entries(res).forEach(([key, value]) => {
@@ -99,7 +99,7 @@ export interface I18nRes {
 
     if (vEntries.length > 0 || componentsValues.length > 0) {
       valuesType = `
-    valuesType: {
+    v: {
       ${Array.from(vMap.entries()).map(([key, v]) => {
         return `${JSON.stringify(key)}: ${v};`
       }).join('\n')}
@@ -112,12 +112,12 @@ export interface I18nRes {
     `;
     } else {
       valuesType = `
-    valuesType: undefined;
+    v: undefined;
     `;
     }
 
     const returnType = `
-    returnType: ${value.map(v => JSON.stringify(v)).join(' | ')};
+    t: ${value.map(v => JSON.stringify(v)).join(' | ')};
     `;
 
     code.push(`${JSON.stringify(key)}: { ${returnType} ${valuesType}};`
@@ -126,15 +126,15 @@ export interface I18nRes {
   code.push("}");
 
   code.push(`
-export type I18nResKeys = keyof I18nRes;
+export type I18nMessageKeys = keyof I18nMessages;
 `);
 
 
   code.push(`
-export type I18nTranslate = <T extends I18nResKeys>(
+export type I18nTranslate = <T extends I18nMessageKeys>(
     key: T,
-    ...values: T extends I18nResKeys ? ( I18nRes[T]['valuesType'] extends undefined ? [] : [ I18nRes[T]['valuesType'] ] ):[]
-) => I18nRes[T]['returnType'];
+    ...values: T extends I18nMessageKeys ? ( I18nMessages[T]['v'] extends undefined ? [] : [ I18nMessages[T]['v'] ] ):[]
+) => I18nMessages[T]['t'];
 `);
 
   if (react) {
