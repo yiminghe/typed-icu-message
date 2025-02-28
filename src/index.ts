@@ -112,7 +112,7 @@ export interface I18nRes {
     `;
     } else {
       valuesType = `
-    valuesType: Record<string, never>;
+    valuesType: undefined;
     `;
     }
 
@@ -132,8 +132,8 @@ export type I18nResKeys = keyof I18nRes;
 
   code.push(`
 export type I18nTranslate = <T extends I18nResKeys>(
-      key: T,
-      values: I18nRes[T]['valuesType']
+    key: T,
+    ...values: I18nRes[T]['valuesType'] extends undefined ? [] : [ I18nRes[T]['valuesType'] ]
 ) => I18nRes[T]['returnType'];
 `);
 

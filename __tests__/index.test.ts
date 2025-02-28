@@ -39,7 +39,7 @@ export interface I18nRes {
 "b": { 
     returnType: "b" | "z";
      
-    valuesType: Record<string, never>;
+    valuesType: undefined;
     };
 "r": { 
     returnType: "<s>d {d}</s>" | "<s>d2 {d} {d2}</s>";
@@ -69,8 +69,8 @@ export type I18nResKeys = keyof I18nRes;
 
 
 export type I18nTranslate = <T extends I18nResKeys>(
-      key: T,
-      values: I18nRes[T]['valuesType']
+    key: T,
+    ...values: I18nRes[T]['valuesType'] extends undefined ? [] : [ I18nRes[T]['valuesType'] ]
 ) => I18nRes[T]['returnType'];
 "
 `);

@@ -29,15 +29,18 @@ const intl = createIntl({
     messages: messages.en
 });
 
-const t: I18nTranslate = ((id:any, values:any) => intl.formatMessage({ id }, values)) as any;
+const t: I18nTranslate = ((id: any, values: any) => intl.formatMessage({ id }, values)) as any;
 
-const rich=t("d", { d: 1, dd: 2, s: (chunks) => React.createElement('div',{},chunks,'1'), ss: (chunks) => React.createElement('span',{},chunks,'3') })
+const rich = t("d", { d: 1, dd: 2, s: (chunks) => React.createElement('div', {}, chunks, '1'), ss: (chunks) => React.createElement('span', {}, chunks, '3') })
 
-console.log(JSON.stringify(rich,null,2));
+console.log(JSON.stringify(rich, null, 2));
 
-console.log(t('b', {}));
+console.log(t('b'));
 
-console.log(t('c', { num: 1, num2: 2 }));
+console.log(t('c',{
+    num: 1,
+    num2: 2
+}));
 
 console.log(t('a', { b: 1, c: 2, d: 3 }));
 
