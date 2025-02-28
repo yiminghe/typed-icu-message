@@ -45,3 +45,5 @@ console.log(t('c',{
 console.log(t('a', { b: 1, c: 2, d: 3 }));
 
 console.log(t('c', { num: 1, num2: 2 }));
+
+// t('dd');

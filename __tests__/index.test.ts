@@ -70,7 +70,7 @@ export type I18nResKeys = keyof I18nRes;
 
 export type I18nTranslate = <T extends I18nResKeys>(
     key: T,
-    ...values: I18nRes[T]['valuesType'] extends undefined ? [] : [ I18nRes[T]['valuesType'] ]
+    ...values: T extends I18nResKeys ? ( I18nRes[T]['valuesType'] extends undefined ? [] : [ I18nRes[T]['valuesType'] ] ):[]
 ) => I18nRes[T]['returnType'];
 "
 `);
