@@ -133,7 +133,7 @@ export type I18nMessageKeys = keyof I18nMessages;
   code.push(`
 export type I18nTranslate = <T extends I18nMessageKeys>(
     key: T,
-    ...values: T extends I18nMessageKeys ? ( I18nMessages[T]['v'] extends undefined ? [] : [ I18nMessages[T]['v'] ] ):[]
+    ...values: I18nMessages[T]['v'] extends {} ? [I18nMessages[T]['v']] : []
 ) => I18nMessages[T]['t'];
 `);
 
