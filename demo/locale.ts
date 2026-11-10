@@ -1,55 +1,58 @@
 import React from 'react';
-
+    
 
 /* eslint-disable */
 export interface I18nMessages {
 
-    "a": {
-        t: "一 {b} {c}" | "one {b} {c} {d}";
+"a": { 
+    t: "一 {b} {c}" | "one {b} {c} {d}";
+     
+    v: {
+      "b": any;
+"c": any;
+"d": any;
 
-        v: {
-            "b": any;
-            "c": any;
-            "d": any;
+      
 
-
-
-        };
     };
-    "b": {
-        t: "b" | "bb";
-
-        v: undefined;
     };
-    "c": {
-        t: "二 {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}" | "two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}";
-
-        v: {
-            "num": number;
-            "num2": any;
-
-
-
-        };
+"b": { 
+    t: "b" | "bb";
+     
+    v: undefined;
     };
-    "d": {
-        t: "<s>d {d}</s>" | "<ss>d {dd}</ss>";
+"c": { 
+    t: "二 {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}" | "two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}";
+     
+    v: {
+      "num": number;
+"num2": any;
 
-        v: {
-            "d": any;
-            "dd": any;
+      
 
-            "s": (chunks: React.ReactNode) => React.ReactNode;
-            "ss": (chunks: React.ReactNode) => React.ReactNode;
+    };
+    };
+"d": { 
+    t: "<s>d {d}</s>" | "<ss>d {dd}</ss>";
+     
+    v: {
+      "d": any;
+"dd": any;
 
-        };
+      "s": (chunks:React.ReactNode) => React.ReactNode;
+"ss": (chunks:React.ReactNode) => React.ReactNode;
+
+    };
     };
 }
 
 export type I18nMessageKeys = keyof I18nMessages;
 
 
+type isAny<T> = 0 extends (1 & T) ? true : false;
+type isUndefined<T> = [T] extends [undefined] ? true : false;
+
 export type I18nTranslate = <T extends I18nMessageKeys>(
     key: T,
-    ...values: I18nMessages[T]['v'] extends {} ? [I18nMessages[T]['v']] : []
+    ...values: isAny<I18nMessages[T]['v']> extends true ? any[] : (isUndefined<I18nMessages[T]['v']> extends true ? [] : [I18nMessages[T]['v']])
 ) => I18nMessages[T]['t'];

@@ -37,6 +37,8 @@ console.log(JSON.stringify(rich, null, 2));
 
 console.log(t('b'));
 
+console.log(t('b' as any));
+
 console.log(t('c',{
     num: 1,
     num2: 2

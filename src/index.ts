@@ -131,9 +131,12 @@ export type I18nMessageKeys = keyof I18nMessages;
 
 
   code.push(`
+type isAny<T> = 0 extends (1 & T) ? true : false;
+type isUndefined<T> = [T] extends [undefined] ? true : false;
+
 export type I18nTranslate = <T extends I18nMessageKeys>(
     key: T,
-    ...values: I18nMessages[T]['v'] extends {} ? [I18nMessages[T]['v']] : []
+    ...values: isAny<I18nMessages[T]['v']> extends true ? any[] : (isUndefined<I18nMessages[T]['v']> extends true ? [] : [I18nMessages[T]['v']])
 ) => I18nMessages[T]['t'];
 `);
 

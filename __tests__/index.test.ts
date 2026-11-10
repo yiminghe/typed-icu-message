@@ -22,12 +22,12 @@ describe('getTsTypesFromRes', () => {
     
 
 /* eslint-disable */
-export interface I18nRes {
+export interface I18nMessages {
 
 "a": { 
-    returnType: "一 {b} {c}" | "one {b} {c} {d}";
+    t: "一 {b} {c}" | "one {b} {c} {d}";
      
-    valuesType: {
+    v: {
       "b": any;
 "c": any;
 "d": any;
@@ -37,14 +37,14 @@ export interface I18nRes {
     };
     };
 "b": { 
-    returnType: "b" | "z";
+    t: "b" | "z";
      
-    valuesType: undefined;
+    v: undefined;
     };
 "r": { 
-    returnType: "<s>d {d}</s>" | "<s>d2 {d} {d2}</s>";
+    t: "<s>d {d}</s>" | "<s>d2 {d} {d2}</s>";
      
-    valuesType: {
+    v: {
       "d": any;
 "d2": any;
 
@@ -53,9 +53,9 @@ export interface I18nRes {
     };
     };
 "c": { 
-    returnType: "二 {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}" | "two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}";
+    t: "二 {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}" | "two {num, plural, =0 {{num2}} =1 {{num2}} other {{num2}}}";
      
-    valuesType: {
+    v: {
       "num": number;
 "num2": any;
 
@@ -65,13 +65,16 @@ export interface I18nRes {
     };
 }
 
-export type I18nResKeys = keyof I18nRes;
+export type I18nMessageKeys = keyof I18nMessages;
 
 
-export type I18nTranslate = <T extends I18nResKeys>(
+type isAny<T> = 0 extends (1 & T) ? true : false;
+type isUndefined<T> = [T] extends [undefined] ? true : false;
+
+export type I18nTranslate = <T extends I18nMessageKeys>(
     key: T,
-    ...values: T extends I18nResKeys ? ( I18nRes[T]['valuesType'] extends undefined ? [] : [ I18nRes[T]['valuesType'] ] ):[]
-) => I18nRes[T]['returnType'];
+    ...values: isAny<I18nMessages[T]['v']> extends true ? any[] : (isUndefined<I18nMessages[T]['v']> extends true ? [] : [I18nMessages[T]['v']])
+) => I18nMessages[T]['t'];
 "
 `);
     });
